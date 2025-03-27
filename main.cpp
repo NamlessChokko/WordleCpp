@@ -8,12 +8,25 @@ using std::string, std::vector, std::cout, std::cin;
 
 
 /*=======Settings=======*/
-const string path = "../words_database_ENGLISH.txt"; // Change this to the path of your words database file. The path should be relative to the output file (executable), no to the main.cpp file.
-const int MAX_TRIES = 6; // You can change the maximum number of tries.
-const int WORD_LENGTH = 5; // You can change the word length too. 
-const string ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; // You can change the allowed characters too, but this is Wordle so it's not recommended. For any reason dont put spaces in the string.
+const string PATH {"../words_database_ENGLISH.txt"}; 
+// Change this to the path of your words database file. 
+// The path should be relative to the output file (executable), no to the main.cpp file.
 
-namespace color { // Do not change this values unless you are colorblind or something like that (just dont change it).
+const int MAX_TRIES {6}; 
+// You can change the maximum number of tries.
+
+const int WORD_LENGTH {5}; 
+// You can change the word length too. 
+
+const string ALLOWED_CHARACTERS = 
+{"abcdefghijklmnñopqrstuvwxyz" "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "-"}; 
+// You can change the allowed characters too, but this is Wordle so it's not recommended. 
+// For any reason don't put spaces in the string. 
+
+namespace color { 
+// Do not change this values unless you are colorblind 
+// or something like that (just don't change it).
+
     constexpr char rst[] = "\033[0m"; // Reset 
     constexpr char rd[] = "\033[31m"; // Red
     constexpr char gn[] = "\033[32m"; // Green
@@ -23,23 +36,27 @@ namespace color { // Do not change this values unless you are colorblind or some
 
 // Early declarations:
 int get_lines_count(string file_path);
-string getWord(int word_count);
+string get_word(int word_count);
 void loop(string word);
 
+
+// Main function
 int main () {
     cout << color::yl << "Welcome to Wordle!" << '\n';
     cout << "Press Enter to start..." << color::rst << '\n';
     cin.ignore();
-    string word = getWord(get_lines_count(path));
+    string word = get_word(get_lines_count(PATH));
+    cin.ignore();
     loop(word);
-    
+
     return 0;
 }
 
 
 /*==========================DEFINITIONS=================================*/
 
-int randInt(int max){ // This function was stolen from chatGPT. I don't know how it works but it works.
+int rand_int(int max){
+// This function was stolen from chatGPT. I don't know how it works but it works.
     std::random_device rd;
     std::mt19937 generator(rd());
     std::uniform_int_distribution<> distribution(0, max);
@@ -47,13 +64,16 @@ int randInt(int max){ // This function was stolen from chatGPT. I don't know how
     return ran; // It returns a random integer between 0 and max.
 }
 
-int get_lines_count(string file_path){ // Counts the number of lines in the file in order to get a random word.  
+int get_lines_count(string file_path){ 
+// Counts the number of lines in the file in order to get a random word.  
     int count = 0;
     string word;
     std::ifstream file(file_path);
 
     if(file.is_open()){ 
-        while (getline(file, word)){ // It iterates through all lines in the text file, using the getline function, counting the number of words.
+        while (getline(file, word)){ 
+        // It iterates through all lines in the text file, 
+        // using the get_line function, counting the number of words.
             count++;
         }
     }
@@ -62,9 +82,9 @@ int get_lines_count(string file_path){ // Counts the number of lines in the file
     return count;
 }
 
-string getLine(int id){ // Get a specific line from the text file.
+string get_line(int id){ // Get a specific line from the text file.
     string word;
-    std::ifstream file(path);
+    std::ifstream file(PATH);
 
     if(file.is_open()){
         for(int i = 0; i < id; i++){
@@ -76,8 +96,9 @@ string getLine(int id){ // Get a specific line from the text file.
     return word;
 }
 
-bool is_word_in_file(string word, string path){ // Function that checks if the word is in the file.
-    std::ifstream file(path);
+bool is_word_in_file(string word, string PATH){ 
+// Function that checks if the word is in the file.
+    std::ifstream file(PATH);
     string line;
     while (getline(file, line)) {
         if (line == word) {
@@ -89,7 +110,9 @@ bool is_word_in_file(string word, string path){ // Function that checks if the w
 }
 
 bool valid_word(string word){ // Valid the word.
-    if (word.length() != WORD_LENGTH) { return false; } // Word have to be a fixed length.
+    if (word.length() != WORD_LENGTH) { 
+        return false; 
+    } // Word have to be a fixed length.
 
     for (int i = 0; i < WORD_LENGTH; i++) { 
         if (ALLOWED_CHARACTERS.find(word[i]) == string::npos) { return false; } // Word can only contain letters
@@ -98,10 +121,12 @@ bool valid_word(string word){ // Valid the word.
     return true;
 }
 
-string getWord (int word_count) { // Function that handle the process of gathering and verification of words from the text file.
+string get_word (int word_count) { 
+// Function that handle the process of gathering and 
+// verification of words from the text file.
     string word = "";
-    while (not valid_word(word)) {      
-        word = getLine(randInt(word_count));
+    while (valid_word(word) == false) {
+        word = get_line(rand_int(word_count));
     }
     return word;
 }
@@ -119,14 +144,16 @@ void format (string input, string correct_word) { // Print one word and letters 
     cout << '\n';
 };
 
-void printTries (std::vector<string>& tries, string& correct_word){  // Prints each word that the player has guessed, each letter will get a color depending on if it is correct or not and in what position it is.
+void print_tries (std::vector<string>& tries, string& correct_word){  
+// Prints each word that the player has guessed, each letter will get a color 
+// depending on if it is correct or not and in what position it is.
     system("clear");  
     for (auto _try : tries){
         format(_try, correct_word);
     }
 }
 
-void loop(string word){ // Main loop of the game 
+void loop (string word){ // Main loop of the game 
     vector<string> tries = {};
     string input = "";
     string ended = "You Lost!";
@@ -134,8 +161,8 @@ void loop(string word){ // Main loop of the game
 
     for (int i = 0; i < MAX_TRIES; i++) {
         input = "";
-        while (is_word_in_file(input, path) == false || valid_word(input) == false) {
-            printTries(tries, word);
+        while (is_word_in_file(input, PATH) == false || valid_word(input) == false) {
+            print_tries(tries, word);
             cout << "> ";
             cin >> input;
         }
@@ -147,7 +174,6 @@ void loop(string word){ // Main loop of the game
             break;
         } 
     }
-    printTries(tries, word);
-    cout << color << "The word was: '" << word << "'" << '\n';
+    print_tries(tries, word);
     cout << ended << color::rst << '\n';
 }
