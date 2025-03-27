@@ -7,7 +7,7 @@ using std::string, std::vector, std::cout, std::cin;
 
 
 /*=======Settings=======*/
-const string PATH {"../words_database_SPANISH.txt"}; 
+const string PATH {"../SPANISH_EASY.txt"}; 
 // Change this to the path of your words database file. 
 // The path should be relative to the output file (executable), no to the main.cpp file.
 
