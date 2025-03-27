@@ -45,8 +45,13 @@ int main () {
     cout << color::yl << "Welcome to Wordle!" << '\n';
     cout << "Press Enter to start..." << color::rst << '\n';
     cin.ignore();
-    string word = get_word(get_lines_count(PATH));
-    cin.ignore();
+    int lines_count = get_lines_count(PATH);
+    string word = get_word(lines_count);
+
+    // Debug lines :
+    // cout << "Lines count:" << lines_count << " Word: " << word << '\n';
+    // cin.ignore();
+
     loop(word);
 
     return 0;
@@ -74,10 +79,13 @@ int get_lines_count(string file_path){
         while (getline(file, word)){ 
         // It iterates through all lines in the text file, 
         // using the get_line function, counting the number of words.
+            
             count++;
         }
     }
 
+
+    cin.ignore();
     file.close();
     return count;
 }
@@ -169,11 +177,14 @@ void loop (string word){ // Main loop of the game
         tries.push_back(input);
         
         if (input == word) {
-            ended = "You Won!";
-            color = color::gn;
-            break;
+            print_tries(tries, word);
+            cout << color::gn << "The word was: " << word << '\n';
+            cout << "You Won!" << color::rst << '\n';
+            return;
         } 
     }
     print_tries(tries, word);
-    cout << ended << color::rst << '\n';
+    cout  << color::rd << "The word was: " << word << '\n';
+    cout << "You Lost!"  << color::rst << '\n';
+    return;
 }
