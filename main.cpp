@@ -8,7 +8,7 @@ using std::string, std::vector, std::cout, std::cin;
 
 
 /*=======Settings=======*/
-const string PATH {"../words_database_ENGLISH.txt"}; 
+const string PATH {"../words_database_SPANISH.txt"}; 
 // Change this to the path of your words database file. 
 // The path should be relative to the output file (executable), no to the main.cpp file.
 
@@ -49,8 +49,8 @@ int main () {
     string word = get_word(lines_count);
 
     // Debug lines :
-    // cout << "Lines count:" << lines_count << " Word: " << word << '\n';
-    // cin.ignore();
+    cout << "Lines count:" << lines_count << " Word: " << word << '\n';
+    cin.ignore();
 
     loop(word);
 
@@ -84,8 +84,6 @@ int get_lines_count(string file_path){
         }
     }
 
-
-    cin.ignore();
     file.close();
     return count;
 }
