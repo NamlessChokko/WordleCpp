@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -16,10 +15,10 @@ const int MAX_TRIES {6};
 // You can change the maximum number of tries.
 
 const int WORD_LENGTH {5}; 
-// You can change the word length too. 
+// You can change the word length. 
 
 const string ALLOWED_CHARACTERS = 
-{"abcdefghijklmnñopqrstuvwxyz" "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "-"}; 
+{"abcdefghijklmnñopqrstuvwxyz" "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ" "-"}; 
 // You can change the allowed characters too, but this is Wordle so it's not recommended. 
 // For any reason don't put spaces in the string. 
 
@@ -49,8 +48,8 @@ int main () {
     string word = get_word(lines_count);
 
     // Debug lines :
-    cout << "Lines count:" << lines_count << " Word: " << word << '\n';
-    cin.ignore();
+    // cout << "Lines count:" << lines_count << " Word: " << word << '\n';
+    // cin.ignore();
 
     loop(word);
 
@@ -108,6 +107,7 @@ bool is_word_in_file(string word, string PATH){
     string line;
     while (getline(file, line)) {
         if (line == word) {
+            file.close();
             return true;
         }
     }
@@ -137,7 +137,8 @@ string get_word (int word_count) {
     return word;
 }
 
-void format (string input, string correct_word) { // Print one word and letters will have different colors.
+void format (string input, string correct_word) { 
+// Print one word, letters will have different colors.
     for (int i = 0; i < static_cast<int>(input.length()); i++) {
         if (input[i] == correct_word[i]) {
             cout << color::gn << input[i] << color::rst;
@@ -162,8 +163,6 @@ void print_tries (std::vector<string>& tries, string& correct_word){
 void loop (string word){ // Main loop of the game 
     vector<string> tries = {};
     string input = "";
-    string ended = "You Lost!";
-    string color = color::rd;
 
     for (int i = 0; i < MAX_TRIES; i++) {
         input = "";
@@ -173,7 +172,7 @@ void loop (string word){ // Main loop of the game
             cin >> input;
         }
         tries.push_back(input);
-        
+
         if (input == word) {
             print_tries(tries, word);
             cout << color::gn << "The word was: " << word << '\n';
@@ -181,6 +180,7 @@ void loop (string word){ // Main loop of the game
             return;
         } 
     }
+
     print_tries(tries, word);
     cout  << color::rd << "The word was: " << word << '\n';
     cout << "You Lost!"  << color::rst << '\n';
